@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informatics Hub: Berpikir Komputasional dalam Analisis Data (Kelas IX)</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            900: '#312e81',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Canvas Confetti for Quiz/Simulation Success -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+        .dark .glass-card {
+            background: rgba(30, 41, 59, 0.85);
+            border: 1px solid rgba(51, 65, 85, 0.8);
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        .dark ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .dark ::-webkit-scrollbar-thumb { background: #475569; }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen flex flex-col transition-colors duration-300">
+
+    <!-- TOP NAVBAR -->
+    <header class="sticky top-0 z-50 glass-card border-b border-slate-200 dark:border-slate-800 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="bg-gradient-to-tr from-indigo-600 to-violet-500 p-2.5 rounded-xl text-white shadow-md shadow-indigo-500/20">
+                    <i data-lucide="cpu" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <span class="text-xs font-semibold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">Informatika Kelas IX</span>
+                    <h1 class="text-base sm:text-lg font-bold tracking-tight text-slate-900 dark:text-white">Analisis Data & Komputasi</h1>
+                </div>
+            </div>
+            <div class="flex items-center space-x-3">
+                <button onclick="toggleDarkMode()" aria-label="Toggle Theme" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition">
+                    <i data-lucide="sun" class="w-5 h-5 hidden dark:block"></i>
+                    <i data-lucide="moon" class="w-5 h-5 block dark:hidden"></i>
+                </button>
+                <div class="hidden sm:flex items-center space-x-2 bg-indigo-50 dark:bg-indigo-950/50 border border-indigo-100 dark:border-indigo-900 px-3 py-1.5 rounded-xl">
+                    <i data-lucide="award" class="w-4 h-4 text-indigo-600 dark:text-indigo-400"></i>
+                    <span class="text-xs font-medium text-indigo-700 dark:text-indigo-300">Kurikulum Merdeka 2026</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN APP CONTAINER -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+        <!-- SIDEBAR NAVIGATION -->
+        <aside class="lg:col-span-3">
+            <div class="sticky top-24 glass-card rounded-2xl p-4 shadow-sm space-y-1">
+                <div class="px-3 py-2 text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Menu Pembelajaran</div>
+                
+                <button onclick="switchTab('peta')" class="nav-btn w-full flex items-center space-x-3 px-3.5 py-3 rounded-xl font-medium text-sm transition text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800" data-target="peta">
+                    <i data-lucide="git-merge" class="w-5 h-5 text-indigo-500"></i>
+                    <span>1. Peta Konsep</span>
+                </button>
+                
+                <button onclick="switchTab('modul')" class="nav-btn w-full flex items-center space-x-3 px-3.5 py-3 rounded-xl font-medium text-sm transition text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800" data-target="modul">
+                    <i data-lucide="book-open" class="w-5 h-5 text-indigo-500"></i>
+                    <span>2. Modul Ajar</span>
+                </button>
+                
+                <button onclick="switchTab('materi')" class="nav-btn w-full flex items-center space-x-3 px-3.5 py-3 rounded-xl font-medium text-sm transition text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800" data-target="materi">
+                    <i data-lucide="layers" class="w-5 h-5 text-indigo-500"></i>
+                    <span>3. Materi Inti</span>
+                </button>
+                
+                <button onclick="switchTab('simulasi')" class="nav-btn w-full flex items-center space-x-3 px-3.5 py-3 rounded-xl font-medium text-sm transition text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800" data-target="simulasi">
+                    <i data-lucide="play-circle" class="w-5 h-5 text-indigo-500"></i>
+                    <span>4. Simulasi Interaktif</span>
+                </button>
+                
+                <button onclick="switchTab('lkpd')" class="nav-btn w-full flex items-center space-x-3 px-3.5 py-3 rounded-xl font-medium text-sm transition text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800" data-target="lkpd">
+                    <i data-lucide="file-text" class="w-5 h-5 text-indigo-500"></i>
+                    <span>5. LKPD Digital</span>
+                </button>
+                
+                <button onclick="switchTab('quiz')" class="nav-btn w-full flex items-center space-x-3 px-3.5 py-3 rounded-xl font-medium text-sm transition text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800" data-target="quiz">
+                    <i data-lucide="help-circle" class="w-5 h-5 text-indigo-500"></i>
+                    <span>6. Kuis Berlevel</span>
+                </button>
+                
+                <button onclick="switchTab('refleksi')" class="nav-btn w-full flex items-center space-x-3 px-3.5 py-3 rounded-xl font-medium text-sm transition text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800" data-target="refleksi">
+                    <i data-lucide="smile" class="w-5 h-5 text-indigo-500"></i>
+                    <span>7. Refleksi Siswa</span>
+                </button>
+
+                <div class="pt-4 mt-4 border-t border-slate-200 dark:border-slate-800 px-3">
+                    <div class="bg-gradient-to-r from-indigo-500/10 to-violet-500/10 p-3 rounded-xl border border-indigo-500/20 space-y-1">
+                        <p class="text-xs font-bold text-indigo-600 dark:text-indigo-400">Pembuat Karya:</p>
+                        <p class="text-xs font-semibold text-slate-800 dark:text-slate-200">Arif Nur Hidayat, S.Pd.</p>
+                        <p class="text-[11px] text-slate-500 dark:text-slate-400">Guru Informatika SMPN 57 Surabaya (2026)</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- CONTENT AREA -->
+        <main class="lg:col-span-9 space-y-6">
+
+            <!-- TAB 1: PETA KONSEP -->
+            <section id="tab-peta" class="tab-content glass-card rounded-2xl p-6 shadow-sm space-y-6">
+                <div class="border-b border-slate-200 dark:border-slate-800 pb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                    <div>
+                        <h2 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
+                            <i data-lucide="git-merge" class="w-7 h-7 text-indigo-600"></i> Peta Konsep Bab I
+                        </h2>
+                        <p class="text-slate-500 dark:text-slate-400 text-sm mt-1">Struktur materi pembelajaran Berpikir Komputasional dalam Analisis Data.</p>
+                    </div>
+                    <div class="bg-indigo-50 dark:bg-indigo-950/50 border border-indigo-100 dark:border-indigo-900 px-3 py-2 rounded-xl text-xs">
+                        <span class="font-semibold text-indigo-700 dark:text-indigo-300">Pengembang:</span> Arif Nur Hidayat, S.Pd. (SMPN 57 Surabaya)
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-indigo-50/50 dark:bg-indigo-950/20 border border-indigo-100 dark:border-indigo-900/50 rounded-2xl p-5 space-y-3">
+                        <div class="flex items-center space-x-3">
+                            <div class="p-2.5 bg-indigo-600 text-white rounded-xl shadow">
+                                <i data-lucide="folder-tree" class="w-5 h-5"></i>
+                            </div>
+                            <h3 class="font-bold text-lg text-slate-900 dark:text-white">Struktur Data Kompleks</h3>
+                        </div>
+                        <p class="text-sm text-slate-600 dark:text-slate-300">Pengelolaan data bertingkat dan terhubung untuk menyelesaikan masalah rumit.</p>
+                        <ul class="space-y-2 text-sm text-slate-600 dark:text-slate-300 pt-2">
+                            <li class="flex items-center gap-2 bg-white dark:bg-slate-800/80 p-2.5 rounded-xl border border-slate-200 dark:border-slate-700">
+                                <span class="w-2 h-2 rounded-full bg-indigo-500"></i></span> <strong>Tree (Pohon):</strong> Hierarki folder, struktur organisasi, labirin aliran air.
+                            </li>
+                            <li class="flex items-center gap-2 bg-white dark:bg-slate-800/80 p-2.5 rounded-xl border border-slate-200 dark:border-slate-700">
+                                <span class="w-2 h-2 rounded-full bg-violet-500"></span> <strong>Graph (Graf):</strong> Jaringan pertemanan, rute transportasi, rute truk sampah.
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="bg-violet-50/50 dark:bg-violet-950/20 border border-violet-100 dark:border-violet-900/50 rounded-2xl p-5 space-y-3">
+                        <div class="flex items-center space-x-3">
+                            <div class="p-2.5 bg-violet-600 text-white rounded-xl shadow">
+                                <i data-lucide="bar-chart-3" class="w-5 h-5"></i>
+                            </div>
+                            <h3 class="font-bold text-lg text-slate-900 dark:text-white">Analisis Data & Visualisasi</h3>
+                        </div>
+                        <p class="text-sm text-slate-600 dark:text-slate-300">Mengolah dan menyajikan data terstruktur agar mudah dipahami.</p>
+                        <ul class="space-y-2 text-sm text-slate-600 dark:text-slate-300 pt-2">
+                            <li class="flex items-center gap-2 bg-white dark:bg-slate-800/80 p-2.5 rounded-xl border border-slate-200 dark:border-slate-700">
+                                <span class="w-2 h-2 rounded-full bg-violet-500"></span> <strong>Jenis Visualisasi:</strong> Batang, Garis, Lingkaran (Pie), dan Pencar (Scatter).
+                            </li>
+                            <li class="flex items-center gap-2 bg-white dark:bg-slate-800/80 p-2.5 rounded-xl border border-slate-200 dark:border-slate-700">
+                                <span class="w-2 h-2 rounded-full bg-indigo-500"></span> <strong>Spreadsheet:</strong> Praktik membuat grafik interaktif menggunakan Excel / Google Sheets.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 2: MODUL AJAR -->
+            <section id="tab-modul" class="tab-content hidden glass-card rounded-2xl p-6 shadow-sm space-y-6">
+                <div class="border-b border-slate-200 dark:border-slate-800 pb-4 flex justify-between items-center">
+                    <div>
+                        <h2 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
+                            <i data-lucide="book-open" class="w-7 h-7 text-indigo-600"></i> Modul Ajar Informatika Kelas IX
+                        </h2>
+                        <p class="text-slate-500 dark:text-slate-400 text-sm mt-1">Bab I: Berpikir Komputasional dalam Analisis Data.</p>
+                    </div>
+                    <button onclick="window.print()" class="hidden sm:flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-sm font-medium transition shadow">
+                        <i data-lucide="printer" class="w-4 h-4"></i> Cetak Modul
+                    </button>
+                </div>
+                <div class="space-y-4 text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                    <div class="bg-slate-100 dark:bg-slate-800/50 p-4 rounded-xl space-y-2">
+                        <h3 class="font-bold text-slate-900 dark:text-white text-base">Identitas Modul</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            <p><strong>Mata Pelajaran:</strong> Informatika</p>
+                            <p><strong>Fase / Kelas:</strong> D / IX (Sembilan)</p>
+                            <p><strong>Penyusun:</strong> Arif Nur Hidayat, S.Pd.</p>
+                            <p><strong>Instansi:</strong> SMPN 57 Surabaya (Tahun 2026)</p>
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <h3 class="font-bold text-slate-900 dark:text-base text-slate-900 dark:text-white">Tujuan Pembelajaran</h3>
+                        <p>Setelah mempelajari bab ini, peserta didik mampu mengasah kembali kemampuan berpikir komputasional untuk menyelesaikan permasalahan kompleks melalui penguasaan struktur data <strong>tree</strong> (pohon) dan <strong>graph</strong> (graf), serta menganalisis himpunan data terstruktur melalui teknik <strong>visualisasi data</strong> dan aplikasi pengolah angka.</p>
+                    </div>
+                    <div class="space-y-2">
+                        <h3 class="font-bold text-slate-900 dark:text-base text-slate-900 dark:text-white">Langkah Pembelajaran (Model Inkuiri & PBL)</h3>
+                        <ol class="list-decimal pl-5 space-y-1.5">
+                            <li><strong>Orientasi Masalah:</strong> Mengamati fenomena penyimpanan folder komputer, jaringan pertemanan, dan grafik BPS.</li>
+                            <li><strong>Eksplorasi & Simulasi:</strong> Menyelesaikan labirin aliran air (Tree) dan rute truk sampah (Graph).</li>
+                            <li><strong>Praktik Terbimbing:</strong> Membuat dan menguji grafik interaktif menggunakan spreadsheet.</li>
+                            <li><strong>Evaluasi & Refleksi:</strong> Mengerjakan kuis berlevel dan mengisi lembar refleksi diri.</li>
+                        </ol>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 3: MATERI PEMBELAJARAN -->
+            <section id="tab-materi" class="tab-content hidden glass-card rounded-2xl p-6 shadow-sm space-y-6">
+                <div class="border-b border-slate-200 dark:border-slate-800 pb-4">
+                    <h2 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
+                        <i data-lucide="layers" class="w-7 h-7 text-indigo-600"></i> Materi Pembelajaran Mendalam
+                    </h2>
+                    <p class="text-slate-500 dark:text-slate-400 text-sm mt-1">Pilih sub-topik untuk mempelajari materi secara komprehensif.</p>
+                </div>
+
+                <!-- Sub-topic Selector Tabs -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                    <button onclick="switchMateriSub('sub1')" id="btn-sub1" class="materi-tab-btn px-4 py-2.5 rounded-xl font-medium text-xs sm:text-sm bg-indigo-600 text-white transition shadow">1. Struktur Tree</button>
+                    <button onclick="switchMateriSub('sub2')" id="btn-sub2" class="materi-tab-btn px-4 py-2.5 rounded-xl font-medium text-xs sm:text-sm bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 transition hover:bg-slate-200">2. Struktur Graph</button>
+                    <button onclick="switchMateriSub('sub3')" id="btn-sub3" class="materi-tab-btn px-4 py-2.5 rounded-xl font-medium text-xs sm:text-sm bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 transition hover:bg-slate-200">3. Jenis Visualisasi</button>
+                    <button onclick="switchMateriSub('sub4')" id="btn-sub4" class="materi-tab-btn px-4 py-2.5 rounded-xl font-medium text-xs sm:text-sm bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 transition hover:bg-slate-200">4. Spreadsheet</button>
+                </div>
+
+                <!-- Sub 1 Content -->
+                <div id="content-sub1" class="materi-content space-y-4 text-sm text-slate-600 dark:text-slate-300">
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white">Struktur Data Tree (Pohon)</h3>
+                    <p>Struktur data tree adalah penyimpanan data hierarki yang menyerupai pohon terbalik. Titik awal berada di atas (disebut <strong>Root/Akar</strong>), bercabang ke simpul perantara (<strong>Parent & Child</strong>), dan berakhir di ujung tanpa anak (<strong>Leaf/Daun</strong>).</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div class="bg-slate-50 dark:bg-slate-800/60 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
+                            <h4 class="font-bold text-slate-900 dark:text-white mb-1">Root (Akar)</h4>
+                            <p class="text-xs">Simpul paling atas tanpa induk (contoh: Folder Utama "Tugas").</p>
+                        </div>
+                        <div class="bg-slate-50 dark:bg-slate-800/60 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
+                            <h4 class="font-bold text-slate-900 dark:text-white mb-1">Parent & Child</h4>
+                            <p class="text-xs">Hubungan induk dan anak (contoh: Kepala Sekolah -> Ketua OSIS).</p>
+                        </div>
+                        <div class="bg-slate-50 dark:bg-slate-800/60 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
+                            <h4 class="font-bold text-slate-900 dark:text-white mb-1">Leaf (Daun)</h4>
+                            <p class="text-xs">Simpul akhir yang tidak memiliki simpul anak lagi.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sub 2 Content -->
+                <div id="content-sub2" class="materi-content hidden space-y-4 text-sm text-slate-600 dark:text-slate-300">
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white">Struktur Data Graph (Graf)</h3>
+                    <p>Struktur data graph terdiri dari kumpulan <strong>simpul (vertex)</strong> yang dihubungkan oleh <strong>ruas (edge)</strong>. Graf sangat ideal untuk memodelkan jaringan hubungan antarobjek yang tidak harus hierarkis.</p>
+                    <ul class="list-disc pl-5 space-y-1.5">
+                        <li><strong>Simpul (Vertex):</strong> Entitas seperti orang, kota, atau tempat penampungan (shelter).</li>
+                        <li><strong>Ruas (Edge):</strong> Jalur penghubung, dapat berupa satu arah (berarah) atau dua arah (tak berarah), serta memiliki bobot (jarak/biaya).</li>
+                        <li><strong>Contoh Nyata:</strong> Jaringan pertemanan media sosial, peta jalur transportasi antar kota, dan rute truk pengangkut sampah.</li>
+                    </ul>
+                </div>
+
+                <!-- Sub 3 Content -->
+                <div id="content-sub3" class="materi-content hidden space-y-4 text-sm text-slate-600 dark:text-slate-300">
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white">Jenis-Jenis Visualisasi Data</h3>
+                    <p>Visualisasi data membantu kita memahami pola, tren, dan perbandingan angka secara cepat melalui grafik:</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div class="bg-slate-50 dark:bg-slate-800/60 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
+                            <h4 class="font-bold text-slate-900 dark:text-white mb-1">Diagram Batang (Bar Chart)</h4>
+                            <p class="text-xs">Membandingkan data angka antar kategori (vertikal/horizontal).</p>
+                        </div>
+                        <div class="bg-slate-50 dark:bg-slate-800/60 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
+                            <h4 class="font-bold text-slate-900 dark:text-white mb-1">Diagram Garis (Line Chart)</h4>
+                            <p class="text-xs">Menunjukkan tren atau perubahan data dari waktu ke waktu.</p>
+                        </div>
+                        <div class="bg-slate-50 dark:bg-slate-800/60 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
+                            <h4 class="font-bold text-slate-900 dark:text-white mb-1">Diagram Lingkaran (Pie Chart)</h4>
+                            <p class="text-xs">Menampilkan proporsi atau komposisi data terhadap keseluruhan (100%).</p>
+                        </div>
+                        <div class="bg-slate-50 dark:bg-slate-800/60 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
+                            <h4 class="font-bold text-slate-900 dark:text-white mb-1">Diagram Pencar (Scatter Plot)</h4>
+                            <p class="text-xs">Menunjukkan hubungan atau korelasi antara dua variabel numerik.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sub 4 Content -->
+                <div id="content-sub4" class="materi-content hidden space-y-4 text-sm text-slate-600 dark:text-slate-300">
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white">Membuat Grafik dengan Spreadsheet</h3>
+                    <p>Aplikasi pengolah angka (seperti Microsoft Excel atau Google Sheets) memudahkan pembuatan grafik secara otomatis:</p>
+                    <ol class="list-decimal pl-5 space-y-1.5">
+                        <li>Ketik atau siapkan data tabel dengan rapi (kolom kategori dan kolom angka).</li>
+                        <li>Blok seluruh sel data yang akan divisualisasikan.</li>
+                        <li>Klik menu <strong>Insert</strong>, lalu pilih jenis grafik yang diinginkan (Column, Line, Pie, atau Scatter).</li>
+                        <li>Tambahkan elemen pelengkap seperti <strong>Chart Title</strong> (Judul Grafik) dan <strong>Axis Titles</strong> (Judul Sumbu X & Y) agar informatif.</li>
+                    </ol>
+                </div>
+            </section>
+
+            <!-- TAB 4: SIMULASI INTERAKTIF -->
+            <section id="tab-simulasi" class="tab-content hidden glass-card rounded-2xl p-6 shadow-sm space-y-6">
+                <div class="border-b border-slate-200 dark:border-slate-800 pb-4">
+                    <h2 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
+                        <i data-lucide="play-circle" class="w-7 h-7 text-indigo-600"></i> Simulasi Interaktif
+                    </h2>
+                    <p class="text-slate-500 dark:text-slate-400 text-sm mt-1">Uji pemahaman melalui simulasi Labirin Air (Tree) dan Spreadsheet Grafik Generator.</p>
+                </div>
+
+                <!-- Sim Selector -->
+                <div class="flex space-x-3 border-b border-slate-200 dark:border-slate-800 pb-4">
+                    <button onclick="switchSim('sim1')" id="btn-sim1" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-indigo-600 text-white transition shadow">Simulasi 1: Labirin Air (Tree)</button>
+                    <button onclick="switchSim('sim2')" id="btn-sim2" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 transition hover:bg-slate-200">Simulasi 2: Grafik Generator</button>
+                </div>
+
+                <!-- SIMULASI 1: Labirin Air -->
+                <div id="sim-content-1" class="space-y-4">
+                    <div class="bg-indigo-50/50 dark:bg-indigo-950/20 p-4 rounded-xl border border-indigo-100 dark:border-indigo-900/50">
+                        <h3 class="font-bold text-slate-900 dark:text-white text-base">Kasus Labirin Air (Buku Paket Hal. 10-12)</h3>
+                        <p class="text-sm text-slate-600 dark:text-slate-300 mt-1">Sumber air utama di titik <strong>A</strong> mengalir ke ruangan tetangga setiap 1 jam. Ruangan dengan batu berwarna merah tidak dapat dilalui air.</p>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="bg-white dark:bg-slate-800 p-5 rounded-xl border border-slate-200 dark:border-slate-700 space-y-3">
+                            <h4 class="font-bold text-sm text-slate-900 dark:text-white">Pertanyaan Simulasi:</h4>
+                            <div class="space-y-3 text-sm">
+                                <div>
+                                    <label class="block font-medium text-xs text-slate-500 mb-1">1. Berapa jam waktu yang dibutuhkan seluruh ruang kosong terisi air?</label>
+                                    <select id="ans-s1-q1" class="w-full bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 text-sm">
+                                        <option value="">Pilih jawaban...</option>
+                                        <option value="salah">1 Jam</option>
+                                        <option value="benar">3 Jam</option>
+                                        <option value="salah">5 Jam</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block font-medium text-xs text-slate-500 mb-1">2. Ruang manakah yang terakhir terisi air?</label>
+                                    <select id="ans-s1-q2" class="w-full bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 text-sm">
+                                        <option value="">Pilih jawaban...</option>
+                                        <option value="salah">Ruang B</option>
+                                        <option value="salah">Ruang C</option>
+                                        <option value="benar">Ruang B3 / Ujung Terluar</option>
+                                    </select>
+                                </div>
+                                <button onclick="checkSim1()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 rounded-xl text-sm transition shadow">Periksa Jawaban</button>
+                                <p id="result-sim1" class="text-sm font-medium text-center hidden"></p>
+                            </div>
+                        </div>
+                        <div class="bg-slate-100 dark:bg-slate-800/80 p-5 rounded-xl border border-slate-200 dark:border-slate-700 flex flex-col justify-center items-center text-center">
+                            <i data-lucide="git-branch" class="w-16 h-16 text-indigo-500 mb-3 animate-pulse"></i>
+                            <h4 class="font-bold text-slate-900 dark:text-white">Struktur Tree Aliran Air</h4>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Simpul A merambat ke B, C, D, E, F hingga mencapai daun terluar. Pohon membantu melacak jalur tercepat dengan mudah.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SIMULASI 2: Live Spreadsheet Chart Generator -->
+                <div id="sim-content-2" class="hidden space-y-4">
+                    <div class="bg-indigo-50/50 dark:bg-indigo-950/20 p-4 rounded-xl border border-indigo-100 dark:border-indigo-900/50">
+                        <h3 class="font-bold text-slate-900 dark:text-white text-base">Live Spreadsheet Chart Generator</h3>
+                        <p class="text-sm text-slate-600 dark:text-slate-300 mt-1">Masukkan data angka untuk melihat visualisasi grafik secara langsung (Live Preview).</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-white dark:bg-slate-800 p-5 rounded-xl border border-slate-200 dark:border-slate-700 space-y-3">
+                            <h4 class="font-bold text-sm text-slate-900 dark:text-white">Input Data Sampah (kg)</h4>
+                            <div class="space-y-2 text-xs">
+                                <div class="flex items-center gap-2">
+                                    <span class="w-28 font-medium">Plastik:</span>
+                                    <input type="number" id="data-plastik" value="45" oninput="renderChart()" class="flex-1 bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg p-2">
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="w-28 font-medium">Organik:</span>
+                                    <input type="number" id="data-organik" value="60" oninput="renderChart()" class="flex-1 bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg p-2">
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="w-28 font-medium">Kertas:</span>
+                                    <input type="number" id="data-kertas" value="30" oninput="renderChart()" class="flex-1 bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg p-2">
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="w-28 font-medium">Logam:</span>
+                                    <input type="number" id="data-logam" value="15" oninput="renderChart()" class="flex-1 bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg p-2">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white dark:bg-slate-800 p-5 rounded-xl border border-slate-200 dark:border-slate-700 flex flex-col justify-center items-center">
+                            <h4 class="font-bold text-xs text-slate-500 uppercase tracking-wider mb-4">Preview Grafik Batang</h4>
+                            <!-- Simple HTML/CSS Bar Chart representation -->
+                            <div class="w-full flex items-end justify-around h-48 pt-6 border-b border-l border-slate-300 dark:border-slate-700 px-4">
+                                <div class="flex flex-col items-center gap-1">
+                                    <span id="val-p" class="text-[10px] font-bold">45</span>
+                                    <div id="bar-p" class="w-10 bg-indigo-500 rounded-t-lg transition-all duration-300" style="height: 90px;"></div>
+                                    <span class="text-[11px] font-medium mt-1">Plastik</span>
+                                </div>
+                                <div class="flex flex-col items-center gap-1">
+                                    <span id="val-o" class="text-[10px] font-bold">60</span>
+                                    <div id="bar-o" class="w-10 bg-violet-500 rounded-t-lg transition-all duration-300" style="height: 120px;"></div>
+                                    <span class="text-[11px] font-medium mt-1">Organik</span>
+                                </div>
+                                <div class="flex flex-col items-center gap-1">
+                                    <span id="val-k" class="text-[10px] font-bold">30</span>
+                                    <div id="bar-k" class="w-10 bg-blue-500 rounded-t-lg transition-all duration-300" style="height: 60px;"></div>
+                                    <span class="text-[11px] font-medium mt-1">Kertas</span>
+                                </div>
+                                <div class="flex flex-col items-center gap-1">
+                                    <span id="val-l" class="text-[10px] font-bold">15</span>
+                                    <div id="bar-l" class="w-10 bg-emerald-500 rounded-t-lg transition-all duration-300" style="height: 30px;"></div>
+                                    <span class="text-[11px] font-medium mt-1">Logam</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 5: LKPD DIGITAL -->
+            <section id="tab-lkpd" class="tab-content hidden glass-card rounded-2xl p-6 shadow-sm space-y-6">
+                <div class="border-b border-slate-200 dark:border-slate-800 pb-4">
+                    <h2 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
+                        <i data-lucide="file-text" class="w-7 h-7 text-indigo-600"></i> LKPD Digital (Lembar Kerja Peserta Didik)
+                    </h2>
+                    <p class="text-slate-500 dark:text-slate-400 text-sm mt-1">Isi lembar kerja berikut, lalu unduh ringkasan hasil kerja kelompok/individu.</p>
+                </div>
+                <div class="space-y-4 text-sm">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block font-medium text-slate-700 dark:text-slate-300 mb-1">Nama Lengkap:</label>
+                            <input type="text" id="lkpd-nama" placeholder="Masukkan nama siswa..." class="w-full bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl p-3 text-sm">
+                        </div>
+                        <div>
+                            <label class="block font-medium text-slate-700 dark:text-slate-300 mb-1">Kelas / Kelompok:</label>
+                            <input type="text" id="lkpd-kelas" placeholder="Contoh: IX-A / Kelompok 3..." class="w-full bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl p-3 text-sm">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block font-medium text-slate-700 dark:text-slate-300 mb-1">1. Analisis Struktur Data Tree (Folder Komputer):</label>
+                        <textarea id="lkpd-j1" rows="3" placeholder="Jelaskan mengapa struktur folder komputer menggunakan konsep tree..." class="w-full bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl p-3 text-sm"></textarea>
+                    </div>
+                    <div>
+                        <label class="block font-medium text-slate-700 dark:text-slate-300 mb-1">2. Analisis Struktur Data Graph (Jaringan Transportasi):</label>
+                        <textarea id="lkpd-j2" rows="3" placeholder="Apa keuntungan menggunakan graph untuk menentukan jalur terpendek?" class="w-full bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl p-3 text-sm"></textarea>
+                    </div>
+                    <div>
+                        <label class="block font-medium text-slate-700 dark:text-slate-300 mb-1">3. Kesimpulan Pemilihan Visualisasi Data:</label>
+                        <textarea id="lkpd-j3" rows="3" placeholder="Kapan kita harus menggunakan diagram garis vs diagram lingkaran?" class="w-full bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl p-3 text-sm"></textarea>
+                    </div>
+                    <button onclick="submitLkpd()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 rounded-xl text-sm transition shadow flex items-center justify-center gap-2">
+                        <i data-lucide="download" class="w-4 h-4"></i> Unduh / Cetak Laporan LKPD
+                    </button>
+                </div>
+            </section>
+
+            <!-- TAB 6: KUIS INTERAKTIF BERLEVEL -->
+            <section id="tab-quiz" class="tab-content hidden glass-card rounded-2xl p-6 shadow-sm space-y-6">
+                <div class="border-b border-slate-200 dark:border-slate-800 pb-4">
+                    <h2 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
+                        <i data-lucide="help-circle" class="w-7 h-7 text-indigo-600"></i> Kuis Interaktif Berlevel
+                    </h2>
+                    <p class="text-slate-500 dark:text-slate-400 text-sm mt-1">Pilih tingkat kesulitan dan uji kemampuan analisis datamu.</p>
+                </div>
+
+                <!-- Level Selector -->
+                <div id="quiz-level-select" class="space-y-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <button onclick="startQuiz('mudah')" class="p-5 rounded-2xl border border-emerald-200 dark:border-emerald-900/50 bg-emerald-50/50 dark:bg-emerald-950/20 hover:bg-emerald-100/50 transition text-left space-y-2">
+                            <div class="flex justify-between items-center">
+                                <span class="font-bold text-emerald-700 dark:text-emerald-400 text-base">Level 1: Mudah</span>
+                                <i data-lucide="smile" class="w-6 h-6 text-emerald-600"></i>
+                            </div>
+                            <p class="text-xs text-slate-600 dark:text-slate-400">Dasar-dasar istilah tree, graph, dan grafik sederhana.</p>
+                        </button>
+                        <button onclick="startQuiz('sedang')" class="p-5 rounded-2xl border border-amber-200 dark:border-amber-900/50 bg-amber-50/50 dark:bg-amber-950/20 hover:bg-amber-100/50 transition text-left space-y-2">
+                            <div class="flex justify-between items-center">
+                                <span class="font-bold text-amber-700 dark:text-amber-400 text-base">Level 2: Sedang</span>
+                                <i data-lucide="zap" class="w-6 h-6 text-amber-600"></i>
+                            </div>
+                            <p class="text-xs text-slate-600 dark:text-slate-400">Analisis kasus aturan tree dan jenis visualisasi data.</p>
+                        </button>
+                        <button onclick="startQuiz('sulit')" class="p-5 rounded-2xl border border-rose-200 dark:border-rose-900/50 bg-rose-50/50 dark:bg-rose-950/20 hover:bg-rose-100/50 transition text-left space-y-2">
+                            <div class="flex justify-between items-center">
+                                <span class="font-bold text-rose-700 dark:text-rose-400 text-base">Level 3: Sulit</span>
+                                <i data-lucide="flame" class="w-6 h-6 text-rose-600"></i>
+                            </div>
+                            <p class="text-xs text-slate-600 dark:text-slate-400">Studi kasus kompleks graph bobot rute dan korelasi scatter plot.</p>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Quiz Active Container -->
+                <div id="quiz-active" class="hidden space-y-4">
+                    <div class="flex justify-between items-center bg-slate-100 dark:bg-slate-800 p-3 rounded-xl text-xs font-semibold">
+                        <span id="quiz-progress">Pertanyaan 1 dari 3</span>
+                        <span id="quiz-score-live" class="text-indigo-600 dark:text-indigo-400">Skor: 0</span>
+                    </div>
+                    <div id="quiz-question-box" class="space-y-4">
+                        <!-- Injected via JS -->
+                    </div>
+                </div>
+
+                <!-- Quiz Result Container -->
+                <div id="quiz-result" class="hidden text-center space-y-4 py-8">
+                    <div class="inline-flex p-4 bg-indigo-100 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 rounded-full">
+                        <i data-lucide="award" class="w-12 h-12"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-slate-900 dark:text-white">Kuis Selesai!</h3>
+                    <p id="quiz-final-score" class="text-base text-slate-600 dark:text-slate-300 font-medium"></p>
+                    <button onclick="resetQuiz()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-xl text-sm font-medium transition shadow">Ulangi Kuis</button>
+                </div>
+            </section>
+
+            <!-- TAB 7: REFLEKSI SISWA -->
+            <section id="tab-refleksi" class="tab-content hidden glass-card rounded-2xl p-6 shadow-sm space-y-6">
+                <div class="border-b border-slate-200 dark:border-slate-800 pb-4">
+                    <h2 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
+                        <i data-lucide="smile" class="w-7 h-7 text-indigo-600"></i> Refleksi Pembelajaran Siswa
+                    </h2>
+                    <p class="text-slate-500 dark:text-slate-400 text-sm mt-1">Nilailah pemahamanmu setelah mempelajari Bab I Berpikir Komputasional.</p>
+                </div>
+                <div class="space-y-4 text-sm">
+                    <div class="space-y-3">
+                        <label class="flex items-center space-x-3 bg-slate-50 dark:bg-slate-800/60 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 cursor-pointer">
+                            <input type="checkbox" class="w-4 h-4 text-indigo-600 rounded">
+                            <span>Saya sudah memahami konsep struktur data tree (pohon) dan penggunaannya dalam folder komputer.</span>
+                        </label>
+                        <label class="flex items-center space-x-3 bg-slate-50 dark:bg-slate-800/60 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 cursor-pointer">
+                            <input type="checkbox" class="w-4 h-4 text-indigo-600 rounded">
+                            <span>Saya mampu menganalisis rute dan jaringan menggunakan struktur data graph (graf).</span>
+                        </label>
+                        <label class="flex items-center space-x-3 bg-slate-50 dark:bg-slate-800/60 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 cursor-pointer">
+                            <input type="checkbox" class="w-4 h-4 text-indigo-600 rounded">
+                            <span>Saya dapat membedakan jenis visualisasi data (batang, garis, lingkaran, pencar) sesuai tujuannya.</span>
+                        </label>
+                        <label class="flex items-center space-x-3 bg-slate-50 dark:bg-slate-800/60 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 cursor-pointer">
+                            <input type="checkbox" class="w-4 h-4 text-indigo-600 rounded">
+                            <span>Saya dapat membuat grafik secara mandiri menggunakan aplikasi spreadsheet.</span>
+                        </label>
+                    </div>
+                    <div>
+                        <label class="block font-medium text-slate-700 dark:text-slate-300 mb-1">Catatan Kesan & Pesan Pembelajaran:</label>
+                        <textarea id="refleksi-catatan" rows="3" placeholder="Tuliskan pengalaman belajarmu hari ini..." class="w-full bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl p-3 text-sm"></textarea>
+                    </div>
+                    <button onclick="submitRefleksi()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 rounded-xl text-sm transition shadow flex items-center justify-center gap-2">
+                        <i data-lucide="send" class="w-4 h-4"></i> Kirim Refleksi Belajar
+                    </button>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="mt-12 py-6 border-t border-slate-200 dark:border-slate-800 text-center text-xs text-slate-500 dark:text-slate-400 space-y-1">
+        <p>Media Pembelajaran Interaktif Informatika Kelas IX • Kurikulum Merdeka / Kemendikdasmen (Tahun 2026)</p>
+        <p class="font-semibold text-slate-700 dark:text-slate-300">Pembuat Karya: Arif Nur Hidayat, S.Pd. (Guru Informatika SMPN 57 Surabaya)</p>
+        <p class="text-[11px]">Siap Deploy ke Vercel • Modern & Canggih</p>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Dark mode toggle
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+        }
+
+        // Tab Navigation
+        function switchTab(targetId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById('tab-' + targetId).classList.remove('hidden');
+
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-indigo-50', 'dark:bg-indigo-950/50', 'text-indigo-600', 'dark:text-indigo-400', 'font-semibold');
+            });
+            event.currentTarget.classList.add('bg-indigo-50', 'dark:bg-indigo-950/50', 'text-indigo-600', 'dark:text-indigo-400', 'font-semibold');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Default active tab styling on load
+        document.addEventListener('DOMContentLoaded', () => {
+            const firstNav = document.querySelector('.nav-btn');
+            if(firstNav) firstNav.classList.add('bg-indigo-50', 'dark:bg-indigo-950/50', 'text-indigo-600', 'dark:text-indigo-400', 'font-semibold');
+        });
+
+        // Materi Sub-tabs
+        function switchMateriSub(subId) {
+            document.querySelectorAll('.materi-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById('content-' + subId).classList.remove('hidden');
+
+            document.querySelectorAll('.materi-tab-btn').forEach(btn => {
+                btn.classList.remove('bg-indigo-600', 'text-white', 'shadow');
+                btn.classList.add('bg-slate-100', 'dark:bg-slate-800', 'text-slate-600', 'dark:text-slate-300');
+            });
+            const activeBtn = document.getElementById('btn-' + subId);
+            activeBtn.classList.remove('bg-slate-100', 'dark:bg-slate-800', 'text-slate-600', 'dark:text-slate-300');
+            activeBtn.classList.add('bg-indigo-600', 'text-white', 'shadow');
+        }
+
+        // Simulation Switch
+        function switchSim(simId) {
+            if(simId === 'sim1') {
+                document.getElementById('sim-content-1').classList.remove('hidden');
+                document.getElementById('sim-content-2').classList.add('hidden');
+                document.getElementById('btn-sim1').className = "px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-indigo-600 text-white transition shadow";
+                document.getElementById('btn-sim2').className = "px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 transition hover:bg-slate-200";
+            } else {
+                document.getElementById('sim-content-1').classList.add('hidden');
+                document.getElementById('sim-content-2').classList.remove('hidden');
+                document.getElementById('btn-sim2').className = "px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-indigo-600 text-white transition shadow";
+                document.getElementById('btn-sim1').className = "px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 transition hover:bg-slate-200";
+            }
+        }
+
+        // Check Simulation 1
+        function checkSim1() {
+            const q1 = document.getElementById('ans-s1-q1').value;
+            const q2 = document.getElementById('ans-s1-q2').value;
+            const res = document.getElementById('result-sim1');
+            res.classList.remove('hidden');
+            if(q1 === 'benar' && q2 === 'benar') {
+                res.className = "text-sm font-medium text-center text-emerald-600 dark:text-emerald-400";
+                res.innerText = "Luar biasa! Jawaban Anda benar. Seluruh ruang terisi dalam 3 jam dan ruang B3 adalah yang terakhir.";
+                confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+            } else {
+                res.className = "text-sm font-medium text-center text-rose-600 dark:text-rose-400";
+                res.innerText = "Belum tepat. Silakan periksa kembali buku paket halaman 10-12 mengenai labirin aliran air!";
+            }
+        }
+
+        // Live Chart Generator Simulation
+        function renderChart() {
+            const p = parseInt(document.getElementById('data-plastik').value) || 0;
+            const o = parseInt(document.getElementById('data-organik').value) || 0;
+            const k = parseInt(document.getElementById('data-kertas').value) || 0;
+            const l = parseInt(document.getElementById('data-logam').value) || 0;
+
+            document.getElementById('val-p').innerText = p;
+            document.getElementById('val-o').innerText = o;
+            document.getElementById('val-k').innerText = k;
+            document.getElementById('val-l').innerText = l;
+
+            document.getElementById('bar-p').style.height = (p * 2) + 'px';
+            document.getElementById('bar-o').style.height = (o * 2) + 'px';
+            document.getElementById('bar-k').style.height = (k * 2) + 'px';
+            document.getElementById('bar-l').style.height = (l * 2) + 'px';
+        }
+
+        // LKPD Submit & Download simulation
+        function submitLkpd() {
+            const nama = document.getElementById('lkpd-nama').value;
+            const kelas = document.getElementById('lkpd-kelas').value;
+            if(!nama || !kelas) {
+                alert('Mohon isi Nama dan Kelas terlebih dahulu.');
+                return;
+            }
+            confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
+            alert('Laporan LKPD Digital berhasil direkam! Ringkasan tugas siap dicetak untuk penilaian guru.');
+        }
+
+        // Quiz Database & Logic
+        const quizData = {
+            mudah: [
+                { q: "Simpul paling awal dalam struktur data tree disebut...", options: ["Leaf", "Root", "Edge", "Parent"], answer: 1 },
+                { q: "Manakah yang merupakan contoh penggunaan struktur data tree dalam sistem komputer?", options: ["Jaringan pertemanan", "Folder dan subfolder", "Peta jalan raya", "Scatter plot"], answer: 1 },
+                { q: "Diagram yang paling tepat untuk menunjukkan proporsi bagian terhadap keseluruhan adalah...", options: ["Diagram Batang", "Diagram Garis", "Diagram Lingkaran (Pie)", "Diagram Pencar"], answer: 2 }
+            ],
+            sedang: [
+                { q: "Dalam struktur data graph, istilah untuk garis penghubung antarsimpul adalah...", options: ["Root", "Branch", "Ruas (Edge)", "Leaf"], answer: 2 },
+                { q: "Jika semakin besar nilai berat badan, tinggi badan juga cenderung semakin besar, maka korelasi pada diagram pencar disebut...", options: ["Korelasi Positif", "Korelasi Negatif", "Tanpa Korelasi", "Korelasi Nol"], answer: 0 },
+                { q: "Fungsi spreadsheet untuk mencari nilai rata-rata adalah...", options: ["SUM", "MAX", "AVERAGE", "COUNT"], answer: 2 }
+            ],
+            sulit: [
+                { q: "Dalam masalah rute truk sampah dengan batasan jarak maksimal 18 km dari TPU, konsep struktur data apa yang digunakan untuk penyelesaiannya?", options: ["Stack", "Tree berbobot", "Graph berbobot", "Queue"], answer: 2 },
+                { q: "Apa fungsi utama dari proses abstraksi dalam berpikir komputasional sebelum membuat visualisasi data?", options: ["Menghitung rata-rata", "Menyaring detail tidak relevan dan fokus pada data penting", "Membuat animasi grafik", "Menghapus file komputer"], answer: 1 },
+                { q: "Diagram mana yang paling tepat untuk menganalisis hubungan sebab-akibat antara dua variabel numerik bebas?", options: ["Pie Chart", "Bar Chart", "Scatter Plot", "Line Chart"], answer: 2 }
+            ]
+        };
+
+        let currentLevel = '';
+        let currentQuizIndex = 0;
+        let quizScore = 0;
+
+        function startQuiz(level) {
+            currentLevel = level;
+            currentQuizIndex = 0;
+            quizScore = 0;
+            document.getElementById('quiz-level-select').classList.add('hidden');
+            document.getElementById('quiz-active').classList.remove('hidden');
+            document.getElementById('quiz-result').classList.add('hidden');
+            loadQuizQuestion();
+        }
+
+        function loadQuizQuestion() {
+            const questions = quizData[currentLevel];
+            if(currentQuizIndex >= questions.length) {
+                document.getElementById('quiz-active').classList.add('hidden');
+                document.getElementById('quiz-result').classList.remove('hidden');
+                document.getElementById('quiz-final-score').innerText = `Skor akhir Anda: ${quizScore} dari ${questions.length * 10} poin.`;
+                confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
+                return;
+            }
+
+            const qObj = questions[currentQuizIndex];
+            document.getElementById('quiz-progress').innerText = `Pertanyaan ${currentQuizIndex + 1} dari ${questions.length}`;
+            document.getElementById('quiz-score-live').innerText = `Skor: ${quizScore}`;
+
+            let html = `<div class="bg-white dark:bg-slate-800 p-5 rounded-xl border border-slate-200 dark:border-slate-700 space-y-4">
+                <h4 class="font-bold text-base text-slate-900 dark:text-white">${qObj.q}</h4>
+                <div class="space-y-2">`;
+            
+            qObj.options.forEach((opt, idx) => {
+                html += `<button onclick="answerQuiz(${idx})" class="w-full text-left p-3 rounded-xl bg-slate-50 dark:bg-slate-900 hover:bg-indigo-50 dark:hover:bg-indigo-950/50 border border-slate-200 dark:border-slate-700 text-sm font-medium transition">${String.fromCharCode(65 + idx)}. ${opt}</button>`;
+            });
+            html += `</div></div>`;
+            document.getElementById('quiz-question-box').innerHTML = html;
+        }
+
+        function answerQuiz(selectedIndex) {
+            const questions = quizData[currentLevel];
+            if(selectedIndex === questions[currentQuizIndex].answer) {
+                quizScore += 10;
+            }
+            currentQuizIndex++;
+            loadQuizQuestion();
+        }
+
+        function resetQuiz() {
+            document.getElementById('quiz-level-select').classList.remove('hidden');
+            document.getElementById('quiz-active').classList.add('hidden');
+            document.getElementById('quiz-result').classList.add('hidden');
+        }
+
+        // Refleksi Submit
+        function submitRefleksi() {
+            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+            alert('Terima kasih! Refleksi pembelajaran Anda telah berhasil disimpan.');
+        }
+    </script>
+</body>
+</html>
